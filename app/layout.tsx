@@ -29,7 +29,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <Toaster richColors position="bottom-right" closeButton />
+        <Toaster richColors position="top-right" closeButton />
       </body>
     </html>
   )

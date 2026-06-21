@@ -26,31 +26,21 @@ const sideTabs: SideTab[] = [
     subtabs: [
       { name: 'Summary', icon: FileText },
       { name: 'Print Badges', icon: Users },
-      { name: 'Qr Setting', icon: Users },
+      { name: 'QR Setting', icon: Users },
     ],
   },
   {
-    name: 'Accomodation',
+    name: 'Scanning',
     icon: Users,
-    baseUrl: 'accomodation',
+    baseUrl: 'scanning',
     subtabs: [
       { name: 'Summary', icon: FileText },
-      { name: 'Add Accomodations', icon: FileText },
-      { name: 'Transfered Accomodations', icon: FileText },
-      { name: 'Allotted Hotels', icon: FileText },
+      { name: 'Single Scan', icon: FileText },
+      { name: 'Multi Scan', icon: FileText },
+      
     ],
   },
-  {
-    name: 'Travel',
-    icon: Users,
-    baseUrl: 'travel',
-    subtabs: [
-      { name: 'Summary', icon: FileText },
-      { name: 'All Travels', icon: FileText },
-      { name: 'Transfered Travels', icon: FileText },
-      { name: 'Travel Desk Support', icon: FileText },
-    ],
-  },
+
 ]
 
 export default sideTabs

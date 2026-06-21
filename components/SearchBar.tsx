@@ -22,7 +22,7 @@ export function SearchBar({ search, loading, onSearch, onChange }: Props) {
 
       <button
         onClick={onSearch}
-        className="h-10 px-5 rounded-md bg-primary text-primary-foreground flex items-center gap-2"
+        className="h-10 px-5 rounded-md bg-sky-800 hover:bg-sky-900 text-primary-foreground flex items-center gap-2"
       >
         <Search size={16} />
         {loading ? 'Searching...' : 'Search'}

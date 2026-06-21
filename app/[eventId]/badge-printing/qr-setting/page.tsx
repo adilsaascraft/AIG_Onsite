@@ -132,157 +132,181 @@ export default function QrSettingPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
-        {/* ======================================================
-            LEFT PANEL
-        ====================================================== */}
+      <div className="space-y-6">
+        {/* ============================================
+          PREVIEW DATA
+      ============================================ */}
 
-        <div className="space-y-6">
-          {/* Preview Data */}
+        <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+          <div className="bg-sky-800 px-4 py-3">
+            <h2 className="font-semibold text-white">Preview Data</h2>
+          </div>
 
-          <div className="rounded-lg border p-4">
-            <h2 className="mb-4 text-lg font-semibold">Preview Data</h2>
+          <div className="grid gap-4 p-4 md:grid-cols-3">
+            <div>
+              <label className="text-sm font-medium">Prefix</label>
 
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm font-medium">Prefix</label>
+              <input
+                value={previewPrefix}
+                onChange={(e) => setPreviewPrefix(e.target.value)}
+                className="mt-1 w-full rounded-md border px-3 py-2"
+              />
+            </div>
 
-                <input
-                  value={previewPrefix}
-                  onChange={(e) => setPreviewPrefix(e.target.value)}
-                  className="mt-1 w-full rounded-md border px-3 py-2"
-                />
+            <div>
+              <label className="text-sm font-medium">Name</label>
+
+              <input
+                value={previewName}
+                onChange={(e) => setPreviewName(e.target.value)}
+                className="mt-1 w-full rounded-md border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Registration Number</label>
+
+              <input
+                value={previewRegNum}
+                onChange={(e) => setPreviewRegNum(e.target.value)}
+                className="mt-1 w-full rounded-md border px-3 py-2"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================
+          SETTINGS + PREVIEW
+      ============================================ */}
+
+        <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+          {/* LEFT PANEL */}
+
+          <div className="space-y-6">
+            <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+              <div className="bg-sky-800 px-4 py-3">
+                <h2 className="font-semibold text-white">QR Settings</h2>
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Name</label>
-
-                <input
-                  value={previewName}
-                  onChange={(e) => setPreviewName(e.target.value)}
-                  className="mt-1 w-full rounded-md border px-3 py-2"
+              <div className="p-4">
+                <QrSettings
+                  qrSize={draftSettings.qrSize}
+                  setQrSize={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      qrSize: v,
+                    }))
+                  }
+                  qrX={draftSettings.qrX}
+                  setQrX={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      qrX: v,
+                    }))
+                  }
+                  qrY={draftSettings.qrY}
+                  setQrY={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      qrY: v,
+                    }))
+                  }
+                  nameFontSize={draftSettings.nameFontSize}
+                  setNameFontSize={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      nameFontSize: v,
+                    }))
+                  }
+                  nameWeight={draftSettings.nameWeight}
+                  setNameWeight={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      nameWeight: v,
+                    }))
+                  }
+                  nameWidth={draftSettings.nameWidth}
+                  setNameWidth={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      nameWidth: v,
+                    }))
+                  }
+                  nameX={draftSettings.nameX}
+                  setNameX={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      nameX: v,
+                    }))
+                  }
+                  nameY={draftSettings.nameY}
+                  setNameY={(v) =>
+                    setDraftSettings((prev) => ({
+                      ...prev,
+                      nameY: v,
+                    }))
+                  }
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="text-sm font-medium">
-                  Registration Number
-                </label>
+            {/* ACTION BUTTONS */}
 
-                <input
-                  value={previewRegNum}
-                  onChange={(e) => setPreviewRegNum(e.target.value)}
-                  className="mt-1 w-full rounded-md border px-3 py-2"
-                />
+            <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+              <div className="bg-sky-800 px-4 py-3">
+                <h2 className="font-semibold text-white">Actions</h2>
+              </div>
+
+              <div className="grid gap-3 p-4">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="w-full rounded-md bg-sky-800 px-4 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {saving ? 'Saving Settings...' : 'Save Settings'}
+                </button>
+
+                <button
+                  onClick={handleReset}
+                  disabled={resetting}
+                  className="w-full rounded-md border px-4 py-3 font-medium disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {resetting ? 'Resetting Layout...' : 'Reset Default Layout'}
+                </button>
+
+                <button
+                  onClick={() => handlePrintView()}
+                  className="w-full rounded-md bg-green-600 px-4 py-3 font-medium text-white"
+                >
+                  Print Test Badge
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Settings */}
+          {/* RIGHT PANEL */}
 
-          <QrSettings
-            qrSize={draftSettings.qrSize}
-            setQrSize={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                qrSize: v,
-              }))
-            }
-            qrX={draftSettings.qrX}
-            setQrX={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                qrX: v,
-              }))
-            }
-            qrY={draftSettings.qrY}
-            setQrY={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                qrY: v,
-              }))
-            }
-            nameFontSize={draftSettings.nameFontSize}
-            setNameFontSize={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                nameFontSize: v,
-              }))
-            }
-            nameWeight={draftSettings.nameWeight}
-            setNameWeight={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                nameWeight: v,
-              }))
-            }
-            nameWidth={draftSettings.nameWidth}
-            setNameWidth={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                nameWidth: v,
-              }))
-            }
-            nameX={draftSettings.nameX}
-            setNameX={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                nameX: v,
-              }))
-            }
-            nameY={draftSettings.nameY}
-            setNameY={(v) =>
-              setDraftSettings((prev) => ({
-                ...prev,
-                nameY: v,
-              }))
-            }
-          />
+          <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+            <div className="bg-sky-800 px-4 py-3">
+              <h2 className="font-semibold text-white">Live Badge Preview</h2>
+            </div>
 
-          {/* Actions */}
-
-          <div className="grid gap-3">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="w-full rounded-md bg-blue-600 px-4 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {saving ? 'Saving Settings...' : 'Save Settings'}
-            </button>
-
-            <button
-              onClick={handleReset}
-              disabled={resetting}
-              className="w-full rounded-md border px-4 py-3 font-medium disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {resetting ? 'Resetting Layout...' : 'Reset Default Layout'}
-            </button>
-
-            <button
-              onClick={() => handlePrintView()}
-              className="w-full rounded-md bg-green-600 px-4 py-3 font-medium text-white"
-            >
-              Print Test Badge
-            </button>
+            <div className="flex justify-center p-6">
+              <BadgePreview
+                attendee={previewAttendee}
+                printRef={printRef}
+                qrSize={draftSettings.qrSize}
+                qrX={draftSettings.qrX}
+                qrY={draftSettings.qrY}
+                nameSize={draftSettings.nameFontSize}
+                nameWeight={draftSettings.nameWeight}
+                nameWidth={draftSettings.nameWidth}
+                nameX={draftSettings.nameX}
+                nameY={draftSettings.nameY}
+              />
+            </div>
           </div>
         </div>
-
-        {/* ======================================================
-            RIGHT PANEL
-        ====================================================== */}
-
-        <BadgePreview
-          attendee={previewAttendee}
-          printRef={printRef}
-          qrSize={draftSettings.qrSize}
-          qrX={draftSettings.qrX}
-          qrY={draftSettings.qrY}
-          nameSize={draftSettings.nameFontSize}
-          nameWeight={draftSettings.nameWeight}
-          nameWidth={draftSettings.nameWidth}
-          nameX={draftSettings.nameX}
-          nameY={draftSettings.nameY}
-        />
       </div>
     </div>
   )

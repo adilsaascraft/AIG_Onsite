@@ -30,6 +30,7 @@ export function SearchResults({ rows, printingId, onPrint, onSelect }: Props) {
               </div>
 
               <div className="text-sm text-muted-foreground">{row.email}</div>
+              <div className="text-sm text-muted-foreground">{row.mobile}</div>
 
               <div className="mt-2">
                 <span
