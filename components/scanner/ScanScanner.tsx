@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { ScanLine, Sparkles } from 'lucide-react'
-
+import { Html5QrcodeScanner } from 'html5-qrcode'
 import {
   Select,
   SelectContent,
@@ -23,7 +23,7 @@ interface ScanScannerProps {
   scanTypeName: string
 }
 
-type ScanMode = 'auto' | 'manual'
+type ScanMode = 'auto' | 'manual' | 'camera'
 
 export default function ScanScanner({
   scanTypeId,
@@ -32,8 +32,8 @@ export default function ScanScanner({
   const [regNum, setRegNum] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<ScanResponse | null>(null)
-  const [scanMode, setScanMode] = useState<'auto' | 'manual'>('auto')
-
+  const [scanMode, setScanMode] = useState<ScanMode>('auto')
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [flashType, setFlashType] = useState<'success' | 'error' | null>(null)
 
   const [scanHistory, setScanHistory] = useState<RecentScan[]>([])
@@ -49,6 +49,8 @@ export default function ScanScanner({
   const successAudioRef = useRef<HTMLAudioElement | null>(null)
 
   const errorAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  const cameraContainerRef = useRef<HTMLDivElement>(null)
 
   const focusInput = useCallback(() => {
     setTimeout(() => {
@@ -94,6 +96,37 @@ export default function ScanScanner({
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (!isCameraOpen) return
+
+    const scanner = new Html5QrcodeScanner(
+      'camera-scanner',
+      {
+        fps: 10,
+        qrbox: {
+          width: 250,
+          height: 250,
+        },
+      },
+      false,
+    )
+
+    scanner.render(
+      async (decodedText) => {
+        await handleScan(decodedText)
+
+        await scanner.clear()
+
+        setIsCameraOpen(false)
+      },
+      () => {},
+    )
+
+    return () => {
+      scanner.clear().catch(() => {})
+    }
+  }, [isCameraOpen])
 
   const triggerSuccessEffects = () => {
     successAudioRef.current?.play().catch(() => {})
@@ -191,7 +224,7 @@ export default function ScanScanner({
         }
 
         setScanHistory((prev) => {
-          const updated = [historyItem, ...prev].slice(0, 10)
+          const updated = [historyItem, ...prev].slice(0, 5)
 
           sessionStorage.setItem('scan-history', JSON.stringify(updated))
 
@@ -279,9 +312,7 @@ export default function ScanScanner({
 
                 <Select
                   value={scanMode}
-                  onValueChange={(value) =>
-                    setScanMode(value as 'auto' | 'manual')
-                  }
+                  onValueChange={(value) => setScanMode(value as ScanMode)}
                 >
                   <SelectTrigger className="h-12 w-full">
                     <SelectValue />
@@ -291,49 +322,53 @@ export default function ScanScanner({
                     <SelectItem value="auto">Auto Scan</SelectItem>
 
                     <SelectItem value="manual">Manual Scan</SelectItem>
+
+                    <SelectItem value="camera">Camera Scan</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-3">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">
-                    Registration Number
-                  </label>
+                {(scanMode === 'auto' || scanMode === 'manual') && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">
+                      Registration Number
+                    </label>
 
-                  <Input
-                    ref={inputRef}
-                    value={regNum}
-                    disabled={loading}
-                    className="h-14 text-lg font-medium"
-                    placeholder="Scan QR or Enter Registration Number"
-                    autoComplete="off"
-                    autoCapitalize="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    onFocus={(e) => e.target.select()}
-                    onChange={(e) => {
-                      const value = e.target.value
+                    <Input
+                      ref={inputRef}
+                      value={regNum}
+                      disabled={loading}
+                      className="h-14 text-lg font-medium"
+                      placeholder="Scan QR or Enter Registration Number"
+                      autoComplete="off"
+                      autoCapitalize="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        const value = e.target.value
 
-                      setRegNum(value)
+                        setRegNum(value)
 
-                      if (scanMode === 'auto') {
-                        triggerAutoScan(value)
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-
-                        if (scanTimeoutRef.current) {
-                          clearTimeout(scanTimeoutRef.current)
+                        if (scanMode === 'auto') {
+                          triggerAutoScan(value)
                         }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
 
-                        handleScan()
-                      }
-                    }}
-                  />
-                </div>
+                          if (scanTimeoutRef.current) {
+                            clearTimeout(scanTimeoutRef.current)
+                          }
+
+                          handleScan()
+                        }
+                      }}
+                    />
+                  </div>
+                )}
 
                 {scanMode === 'manual' && (
                   <Button
@@ -344,11 +379,42 @@ export default function ScanScanner({
                     {loading ? 'Scanning...' : 'Start Scan'}
                   </Button>
                 )}
+
+                {scanMode === 'camera' && !isCameraOpen && (
+                  <Button
+                    className="h-12 w-full bg-sky-800 hover:bg-sky-900"
+                    onClick={() => setIsCameraOpen(true)}
+                  >
+                    Start Camera Scan
+                  </Button>
+                )}
+
+                {scanMode === 'camera' && isCameraOpen && (
+                  <Card>
+                    <CardContent className="space-y-4 p-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold">Camera Scanner</h3>
+
+                        <Button
+                          variant="destructive"
+                          onClick={() => setIsCameraOpen(false)}
+                        >
+                          Close
+                        </Button>
+                      </div>
+
+                      <div
+                        id="camera-scanner"
+                        className="overflow-hidden rounded-lg"
+                      />
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          {result && (
+          {result ? (
             <Card
               className={
                 result.success
@@ -449,6 +515,57 @@ export default function ScanScanner({
                 )}
               </CardContent>
             </Card>
+          ) : (
+            <Card className="border-amber-200 bg-amber-50/60 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="rounded-xl bg-amber-100 p-3">
+                    <Sparkles className="h-6 w-6 text-amber-700" />
+                  </div>
+
+                  <div className="space-y-3">
+                    <h2 className="text-xl font-bold text-amber-900">
+                      Operator Guidance
+                    </h2>
+
+                    <div className="space-y-2 text-sm leading-6 text-amber-900">
+                      <p>
+                        • If an attendee shows a QR code that does not scan,
+                        check whether their phone is using{' '}
+                        <strong>Dark Mode</strong>.
+                      </p>
+
+                      <p>
+                        • Some devices automatically invert QR code colors in
+                        Dark Mode, making them difficult for scanners and
+                        cameras to detect.
+                      </p>
+
+                      <p>
+                        • Ask the attendee to temporarily switch their device to{' '}
+                        <strong>Light Mode</strong> and open the QR code again.
+                      </p>
+
+                      <p>
+                        • If the attendee has a screenshot of the QR code taken
+                        in Light Mode, use that screenshot instead.
+                      </p>
+
+                      <p>
+                        • If scanning still fails, use{' '}
+                        <strong>Manual Scan</strong> and enter the attendee's
+                        Registration Number.
+                      </p>
+
+                      <p>
+                        • For best results, increase screen brightness and avoid
+                        cracked screens or heavily zoomed QR codes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
 
@@ -481,19 +598,28 @@ export default function ScanScanner({
     hover:bg-sky-50
   "
                 >
-                  <p className="font-semibold">{scan.name}</p>
+                  <p className="font-semibold text-sky-800">
+                    <span className="text-black">Name: </span>
+                    {scan.name}
+                  </p>
 
-                  <p className="text-sm text-muted-foreground">{scan.regNum}</p>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="text-black">Registration Number: </span>
+                    {scan.regNum}
+                  </p>
 
                   <p className="text-xs text-muted-foreground">
+                    <span className="text-black">Badge Type: </span>
                     {scan.badgeType}
                   </p>
 
                   <p className="text-xs text-muted-foreground">
+                    <span className="text-black">Scan Type: </span>
                     {scan.scanType}
                   </p>
 
                   <p className="mt-1 text-xs text-muted-foreground">
+                    <span className="text-black">Scanned At: </span>
                     {new Date(scan.scannedAt).toLocaleString('en-IN', {
                       timeZone: 'Asia/Kolkata',
                     })}

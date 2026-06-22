@@ -94,11 +94,13 @@ export function buildBadgeSummary(badges: Badge[]): BadgeSummary {
         new Date(b.lastPrintedAt!).getTime() -
         new Date(a.lastPrintedAt!).getTime(),
     )
-    .slice(0, 3)
+    .slice(0, 4)
     .map((badge) => ({
       id: badge._id,
       name: badge.name,
       regNum: badge.regNum,
+      email: badge.email || 'N/A',
+      mobile: badge.mobile || 'N/A',
       badgeProfileName: badge.badgeProfileName || 'Unknown',
       printedAt: badge.lastPrintedAt!,
       printCount: badge.printCount,

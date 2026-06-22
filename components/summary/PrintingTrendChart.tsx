@@ -1,4 +1,5 @@
-'use client'
+
+'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -27,14 +28,42 @@ interface Props {
   data: TrendItem[]
 }
 
-export default function PrintingTrendChart({ data }: Props) {
+// ======================================================
+// TREND COLOR DETECTION
+// ======================================================
+const getTrendColor = (data: TrendItem[]) => {
+  if (!data || data.length < 2) return '#38bdf8'
+
+  const mid = Math.floor(data.length / 2)
+
+  const firstHalf =
+    data.slice(0, mid).reduce((sum, d) => sum + d.prints, 0) /
+    (mid || 1)
+
+  const secondHalf =
+    data.slice(mid).reduce((sum, d) => sum + d.prints, 0) /
+    (data.length - mid || 1)
+
+  if (secondHalf > firstHalf) return '#16a34a' // growing
+  if (secondHalf < firstHalf) return '#ef4444' // declining
+
+  return '#38bdf8' // stable
+}
+
+export default function PrintingTrendChart({
+  data,
+}: Props) {
+  const trendColor = getTrendColor(data)
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Badge Printing Trend</CardTitle>
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+      <CardHeader className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white">
+        <CardTitle className="p-3 font-bold text-slate-900">
+          Badge Printing Trend
+        </CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="p-5">
         <ChartContainer
           config={{
             prints: {
@@ -53,7 +82,24 @@ export default function PrintingTrendChart({ data }: Props) {
                 bottom: 80,
               }}
             >
-              <CartesianGrid vertical={false} />
+              <defs>
+                {/* Gradient Stroke (premium feel) */}
+                <linearGradient
+                  id="trendStroke"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="0"
+                >
+                  <stop offset="0%" stopColor={trendColor} />
+                  <stop offset="100%" stopColor="#38bdf8" />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid
+                vertical={false}
+                stroke="#e2e8f0"
+              />
 
               <XAxis
                 dataKey="dateTime"
@@ -64,21 +110,34 @@ export default function PrintingTrendChart({ data }: Props) {
                 axisLine={false}
                 interval={0}
                 fontSize={12}
+                stroke="#94a3b8"
               />
 
-              <YAxis allowDecimals={false} tickLine={false} axisLine={false} />
+              <YAxis
+                allowDecimals={false}
+                tickLine={false}
+                axisLine={false}
+                stroke="#94a3b8"
+              />
 
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip
+                content={<ChartTooltipContent />}
+              />
 
               <Line
                 type="monotone"
                 dataKey="prints"
+                stroke="url(#trendStroke)"
                 strokeWidth={3}
                 dot={{
                   r: 5,
+                  fill: trendColor,
+                  stroke: '#fff',
+                  strokeWidth: 2,
                 }}
                 activeDot={{
                   r: 8,
+                  fill: trendColor,
                 }}
               />
             </LineChart>

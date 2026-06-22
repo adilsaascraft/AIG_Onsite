@@ -1,4 +1,5 @@
-'use client'
+
+'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -27,56 +28,95 @@ interface Props {
   items: TopReprintItem[]
 }
 
-export default function TopReprintedBadges({ items }: Props) {
+// ======================================================
+// HEAT COLOR BASED ON PRINT COUNT
+// ======================================================
+const getHeatColor = (count: number) => {
+  if (count >= 10) return 'bg-red-100 text-red-700 border-red-200'
+  if (count >= 5) return 'bg-orange-100 text-orange-700 border-orange-200'
+  if (count >= 3) return 'bg-amber-100 text-amber-700 border-amber-200'
+  return 'bg-sky-100 text-sky-700 border-sky-200'
+}
+
+export default function TopReprintedBadges({
+  items,
+}: Props) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+      <CardHeader className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white">
+        <CardTitle className="p-3 font-bold flex items-center gap-2 text-slate-900">
           <Trophy className="h-5 w-5 text-amber-500" />
           Top Reprinted Badges
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="p-0">
         {items.length === 0 ? (
-          <div className="py-10 text-center text-muted-foreground">
+          <div className="py-10 text-center text-sm text-muted-foreground">
             No reprinted badges found
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="bg-sky-50">
                   <TableHead>Name</TableHead>
-
                   <TableHead>Reg No</TableHead>
-
                   <TableHead>Badge Profile</TableHead>
-
                   <TableHead className="text-right">Print Count</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
-                {items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
+                {items.map((item, index) => {
+                  const heatClass = getHeatColor(item.printCount)
 
-                    <TableCell>{item.regNum}</TableCell>
+                  return (
+                    <TableRow
+                      key={item.id}
+                      className="
+                        transition-all
+                        hover:bg-sky-50/60
+                      "
+                    >
+                      {/* Name (with rank indicator) */}
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-sky-600">
+                            #{index + 1}
+                          </span>
 
-                    <TableCell>
-                      <Badge variant="secondary">{item.badgeProfileName}</Badge>
-                    </TableCell>
+                          <span>{item.name}</span>
+                        </div>
+                      </TableCell>
 
-                    <TableCell className="text-right">
-                      <Badge>
-                        <Printer className="mr-1 h-3 w-3" />
+                      <TableCell className="text-slate-600">
+                        {item.regNum}
+                      </TableCell>
 
-                        {item.printCount}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className="bg-sky-100 text-sky-700"
+                        >
+                          {item.badgeProfileName}
+                        </Badge>
+                      </TableCell>
+
+                      {/* Print Count KPI */}
+                      <TableCell className="text-right">
+                        <div className="flex justify-end">
+                          <Badge
+                            className={`flex items-center gap-1 border ${heatClass}`}
+                          >
+                            <Printer className="h-3 w-3" />
+                            {item.printCount}
+                          </Badge>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>

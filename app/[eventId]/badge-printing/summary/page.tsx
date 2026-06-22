@@ -135,9 +135,9 @@ export default function SummaryPage() {
       {/* ====================================================== */}
       {/* Row 2 */}
       {/* ====================================================== */}
-
-      <RecentPrintActivity items={summary.recentPrints} />
-
+      <div className="grid gap-4 ">
+        <RecentPrintActivity items={summary.recentPrints} />
+      </div>
       {/* ====================================================== */}
       {/* Row 3 */}
       {/* ====================================================== */}

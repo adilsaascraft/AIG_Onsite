@@ -65,6 +65,8 @@ export interface BreakdownItem {
 export interface RecentPrintItem {
   id: string
   name: string
+  email: string
+  mobile: string
   regNum: string
   badgeProfileName: string
   printedAt: string

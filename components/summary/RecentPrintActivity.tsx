@@ -1,16 +1,17 @@
-'use client'
+'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
 import { Badge } from '@/components/ui/badge'
 
-import { Clock3, Printer, User } from 'lucide-react'
+import { Clock3, Printer } from 'lucide-react'
 
 interface RecentPrintItem {
   id: string
   name: string
   regNum: string
   badgeProfileName: string
+  email: string
+  mobile: string
   printedAt: string
   printCount: number
 }
@@ -21,50 +22,123 @@ interface Props {
 
 export default function RecentPrintActivity({ items }: Props) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Printer className="h-5 w-5" />
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+      <CardHeader className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white">
+        <CardTitle className="p-3 font-bold flex items-center gap-2 text-slate-900">
+          <Printer className="h-5 w-5 text-sky-600" />
           Recent Print Activity
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="p-4">
         {items.length === 0 ? (
-          <div className="py-10 text-center text-muted-foreground">
-            No badge printing activity found
+          <div className="rounded-xl border border-dashed border-sky-200 bg-sky-50/50 py-10 text-center">
+            <Printer className="mx-auto mb-3 h-10 w-10 text-sky-300" />
+
+            <p className="font-medium text-slate-700">
+              No badge printing activity
+            </p>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Printed badges will appear here
+            </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid gap-3 md:grid-cols-2">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-col gap-3 rounded-lg border p-4 md:flex-row md:items-center md:justify-between"
+                className="
+                  relative
+                  overflow-hidden
+                  rounded-xl
+                  border
+                  border-sky-200
+                  bg-gradient-to-br
+                  from-white
+                  via-sky-50/20
+                  to-sky-100/40
+                  p-4
+                  shadow-sm
+                  transition-all
+                  duration-300
+                  hover:-translate-y-0.5
+                  hover:border-sky-300
+                  hover:shadow-lg
+                "
               >
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
+                <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-sky-500 to-sky-700" />
 
-                    <span className="font-semibold">{item.name}</span>
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-semibold text-slate-900">
+                      {item.name}
+                    </h3>
 
-                    <Badge variant="secondary">{item.badgeProfileName}</Badge>
+                    <p className="text-xs text-slate-500">
+                      Badge Printed Successfully
+                    </p>
                   </div>
 
-                  <div className="text-sm text-muted-foreground">
-                    {item.regNum}
+                  <div className="flex flex-col items-end gap-2">
+                    <Badge
+                      variant="secondary"
+                      className="bg-sky-100 text-sky-700"
+                    >
+                      {item.printCount} Prints
+                    </Badge>
+
+                    <div className="flex items-center gap-1 text-xs text-slate-500">
+                      <Clock3 className="h-3.5 w-3.5" />
+
+                      {new Date(item.printedAt).toLocaleString('en-IN', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                      })}
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge>{item.printCount} Prints</Badge>
+                <div className="space-y-2 text-sm">
+                  <div className="flex gap-2">
+                    <span className="min-w-[110px] font-medium text-slate-500">
+                      Reg. Number:
+                    </span>
 
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Clock3 className="h-4 w-4" />
+                    <span className="font-semibold text-slate-900">
+                      {item.regNum}
+                    </span>
+                  </div>
 
-                    {new Date(item.printedAt).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    })}
+                  <div className="flex gap-2">
+                    <span className="min-w-[110px] font-medium text-slate-500">
+                      Badge Profile:
+                    </span>
+
+                    <Badge
+                      variant="secondary"
+                      className="bg-sky-100 text-sky-700"
+                    >
+                      {item.badgeProfileName}
+                    </Badge>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <span className="min-w-[110px] font-medium text-slate-500">
+                      Email:
+                    </span>
+
+                    <span className="break-all text-slate-800">
+                      {item.email}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <span className="min-w-[110px] font-medium text-slate-500">
+                      Mobile:
+                    </span>
+
+                    <span className="text-slate-800">{item.mobile}</span>
                   </div>
                 </div>
               </div>
