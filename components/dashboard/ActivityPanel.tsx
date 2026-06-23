@@ -71,7 +71,7 @@ export default function ActivityPanel({ scans }: Props) {
                   </p>
 
                   <p className="text-xs text-sky-700 font-medium">
-                    {item.scanTypeId?.scanType || 'Unknown'}
+                    {item.scanTypeId?.scanType || 'Other'}
                   </p>
                 </div>
 

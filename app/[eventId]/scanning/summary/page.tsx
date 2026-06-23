@@ -56,7 +56,7 @@ export default function ScanSummaryPage() {
     const scanTypesMap: Record<string, number> = {}
 
     rows.forEach((row) => {
-      const key = row?.scanTypeId?.scanType || 'Unknown'
+      const key = row?.scanTypeId?.scanType || 'Other'
 
       scanTypesMap[key] = (scanTypesMap[key] || 0) + (row.scanCount || 0)
     })

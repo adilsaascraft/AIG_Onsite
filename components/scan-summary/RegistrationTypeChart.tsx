@@ -24,7 +24,7 @@ export default function RegistrationTypeChart({ rows }: Props) {
   const map: Record<string, number> = {}
 
   rows.forEach((row) => {
-    const type = row.badgeId?.registrationType || 'Unknown'
+    const type = row.badgeId?.registrationType || 'Other'
 
     map[type] = (map[type] || 0) + 1
   })
@@ -37,7 +37,7 @@ export default function RegistrationTypeChart({ rows }: Props) {
   const total = data.reduce((sum, item) => sum + item.value, 0)
 
   return (
-    <Card className="overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
       {/* Header */}
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white p-5">
         <div className="flex items-center gap-2">

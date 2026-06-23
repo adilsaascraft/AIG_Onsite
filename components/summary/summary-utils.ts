@@ -84,7 +84,7 @@ export function buildBadgeSummary(badges: Badge[]): BadgeSummary {
 
   const profileBreakdown = calculateBreakdown(
     badges,
-    (badge) => badge.badgeProfileName || 'Unknown',
+    (badge) => badge.badgeProfileName || 'Other',
   )
 
   const recentPrints = badges
@@ -101,7 +101,7 @@ export function buildBadgeSummary(badges: Badge[]): BadgeSummary {
       regNum: badge.regNum,
       email: badge.email || 'N/A',
       mobile: badge.mobile || 'N/A',
-      badgeProfileName: badge.badgeProfileName || 'Unknown',
+      badgeProfileName: badge.badgeProfileName || 'Other',
       printedAt: badge.lastPrintedAt!,
       printCount: badge.printCount,
     }))
@@ -162,7 +162,7 @@ export function buildBadgeSummary(badges: Badge[]): BadgeSummary {
       id: badge._id,
       name: badge.name,
       regNum: badge.regNum,
-      badgeProfileName: badge.badgeProfileName || 'Unknown',
+      badgeProfileName: badge.badgeProfileName || 'Other',
       printCount: badge.printCount,
     }))
 

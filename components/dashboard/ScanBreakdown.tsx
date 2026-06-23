@@ -8,7 +8,7 @@ export default function ScanBreakdown({ scans }: Props) {
   const map: Record<string, number> = {}
 
   scans.forEach((scan) => {
-    const type = scan.scanTypeId?.scanType || 'Unknown'
+    const type = scan.scanTypeId?.scanType || 'Other'
 
     map[type] = (map[type] || 0) + (scan.scanCount || 0)
   })

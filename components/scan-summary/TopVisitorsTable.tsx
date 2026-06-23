@@ -6,7 +6,7 @@ import { Trophy, ScanLine } from 'lucide-react'
 
 export default function TopVisitorsTable({ data }: { data: any[] }) {
   return (
-    <Card className="overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white p-5">
         <div className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-amber-500" />
@@ -75,7 +75,7 @@ export default function TopVisitorsTable({ data }: { data: any[] }) {
 
                     <div>
                       <h3 className="font-semibold text-slate-900">
-                        {item.badgeId?.name || 'Unknown Visitor'}
+                        {item.badgeId?.name || 'Other Visitor'}
                       </h3>
 
                       <p className="text-sm text-slate-500">{item.regNum}</p>

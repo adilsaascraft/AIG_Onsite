@@ -10,6 +10,8 @@ import ActivityPanel from '@/components/dashboard/ActivityPanel'
 
 import { getScanSummary } from '@/services/scanSummary.service'
 import { apiClient } from '@/lib/apiClient'
+import OperationalStatus from '@/components/dashboard/OperationalStatus'
+import LiveInsights from '@/components/dashboard/LiveInsights'
 
 export default function ScanSummaryPage() {
   const { eventId } = useParams()
@@ -127,6 +129,15 @@ export default function ScanSummaryPage() {
         uniqueVisitors={analytics.uniqueVisitors}
         reEntries={analytics.reEntries}
       />
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <OperationalStatus
+          totalBadges={analytics.totalBadges}
+          printedBadges={analytics.printedBadges}
+        />
+
+        <LiveInsights scans={scans} />
+      </div>
 
       {/* ========================================= */}
       {/* BREAKDOWNS */}

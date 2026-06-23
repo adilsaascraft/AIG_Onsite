@@ -12,7 +12,7 @@ export default function BadgeBreakdown({ badges }: Props) {
   const badgeMap: Record<string, number> = {}
 
   badges.forEach((badge) => {
-    const key = badge.badgeProfileName || 'Unknown'
+    const key = badge.badgeProfileName || 'Other'
 
     badgeMap[key] = (badgeMap[key] || 0) + 1
   })
@@ -29,7 +29,7 @@ export default function BadgeBreakdown({ badges }: Props) {
   const max = Math.max(...data.map((x) => x.count), 1)
 
   return (
-    <Card className="overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
       {/* Header */}
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white p-5">
         <div className="flex items-center gap-2">

@@ -57,6 +57,7 @@ export default function SummaryCards({
           <Card
             key={card.title}
             className="
+            p-0 
               overflow-hidden
               border-sky-200
               bg-gradient-to-br

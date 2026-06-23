@@ -20,7 +20,7 @@ export default function SponsorBreakdownChart({ rows }: Props) {
   const nonSponsorPercentage = 100 - sponsorPercentage
 
   return (
-    <Card className="overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
       {/* Header */}
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white p-5">
         <h2 className="font-bold text-slate-900">Sponsor Breakdown</h2>

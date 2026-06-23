@@ -6,7 +6,7 @@ import { Activity, Clock3 } from 'lucide-react'
 
 export default function RecentActivity({ data }: { data: any[] }) {
   return (
-    <Card className="overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
+    <Card className="p-0 overflow-hidden border-sky-200 shadow-lg shadow-sky-100">
       {/* Header */}
       <div className="border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white p-5">
         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function RecentActivity({ data }: { data: any[] }) {
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <h3 className="font-semibold text-slate-900">
-                      {item.badgeId?.name || 'Unknown Visitor'}
+                      {item.badgeId?.name || 'Other Visitor'}
                     </h3>
 
                     <p className="mt-1 text-sm text-slate-500">
