@@ -61,7 +61,7 @@ export default function MobileNavbar() {
                 )
 
               const dashboardHref = eventId
-                ? `/events/${eventId}/${item.baseUrl}`
+                ? `/${eventId}/${item.baseUrl}`
                 : '#'
 
               return (
@@ -158,7 +158,7 @@ export default function MobileNavbar() {
                     const SubIcon = sub.icon
                     const parent = navItems.find((i) => i.name === openMenu)
                     const subPath = eventId
-                      ? `/events/${eventId}/${parent?.baseUrl}/${sub.name
+                      ? `/${eventId}/${parent?.baseUrl}/${sub.name
                           .toLowerCase()
                           .replace(/\s+/g, '-')}`
                       : '#'
