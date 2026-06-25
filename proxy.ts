@@ -29,7 +29,7 @@ export const config = {
   matcher: [
     '/',
     '/:eventId/dashboard/:path*',
-    '/:eventId/scan/:path*',
-    '/:eventId/print/:path*',
+    '/:eventId/badge-printing/:path*',
+    '/:eventId/scanning/:path*',
   ],
 }
